@@ -18,6 +18,10 @@ repositories {
 val koin_version = "3.5.0"
 
 dependencies {
+    implementation(project(":shared"))
+    implementation(project(":adapters:db"))
+    implementation(project(":adapters:theharvester"))
+
     implementation(platform("io.insert-koin:koin-bom:$koin_version"))
     implementation("io.insert-koin:koin-core")
     implementation("io.insert-koin:koin-core-coroutines")
