@@ -23,6 +23,9 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":shared"))
+    implementation(project(":application"))
+
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-swagger-jvm")
     implementation("io.ktor:ktor-server-cors-jvm")

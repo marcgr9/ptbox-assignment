@@ -1,6 +1,3 @@
 ktor:
-    application:
-        modules:
-            - ro.marc.ptbox.ktor.ApplicationKt.module
     deployment:
         port: 8080

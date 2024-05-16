@@ -15,4 +15,10 @@ repositories {
     mavenCentral()
 }
 
-dependencies { }
+val koin_version = "3.5.0"
+
+dependencies {
+    implementation(platform("io.insert-koin:koin-bom:$koin_version"))
+    implementation("io.insert-koin:koin-core")
+    implementation("io.insert-koin:koin-core-coroutines")
+}
