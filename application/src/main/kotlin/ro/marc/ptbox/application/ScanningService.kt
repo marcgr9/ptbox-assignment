@@ -19,7 +19,7 @@ class ScanningService(
     private val scansRepository: ScansRepository,
 ) {
 
-    private val _scanCompletedEvent = MutableSharedFlow<Scan>(replay = 1)
+    private val _scanCompletedEvent = MutableSharedFlow<Scan>(extraBufferCapacity = 1)
     val scanCompletedEvent: Flow<Scan>
         get() = _scanCompletedEvent.asSharedFlow()
 
@@ -40,15 +40,12 @@ class ScanningService(
             status = Scan.Status.PENDING,
             results = listOf(),
         )
-        scanAdapter.processWebsite(scan)
 
         scansRepository.create(scan)
 
-        return scan.id
-    }
+        scanAdapter.processWebsite(scan)
 
-    private suspend fun saveScanInDb(scan: Scan): Scan {
-        return scansRepository.create(scan)
+        return scan.id
     }
 
     private fun generateTaskId(): UUID = UUID.randomUUID();
