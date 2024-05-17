@@ -5,18 +5,24 @@ import com.github.dockerjava.api.model.Frame
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.core.DockerClientBuilder
 import org.koin.core.component.KoinComponent
-import ro.marc.ptbox.shared.domain.AmassAdapter
+import org.koin.core.parameter.parametersOf
+import ro.marc.ptbox.shared.domain.Scan
+import ro.marc.ptbox.shared.domain.ScanAdapter
 
-class AmassAdapterImpl: AmassAdapter, KoinComponent {
+class AmassAdapterImpl: ScanAdapter, KoinComponent {
 
-    private val callback: ResultCallback<Frame>
-        get() = getKoin().get<ResultCallback<Frame>>()
+    private val dockerClient = DockerClientBuilder.getInstance().build()
 
-    override fun processWebsite(website: String) {
-        val dockerClient = DockerClientBuilder.getInstance().build()
+    private fun callbackFactory(scan: Scan): ResultCallback<Frame> {
+        return getKoin().get<ResultCallback<Frame>> {
+            parametersOf(scan)
+        }
+    }
+
+    override fun processWebsite(scan: Scan) {
         val container = dockerClient
             .createContainerCmd("caffix/amass")
-            .withCmd("intel", "-whois", website)
+            .withCmd("intel", "-whois", scan.website)
             .withHostConfig(HostConfig().withAutoRemove(true))
             .exec()
 
@@ -28,8 +34,7 @@ class AmassAdapterImpl: AmassAdapter, KoinComponent {
             .withStdOut(true)
             .withStdErr(true)
             .withFollowStream(true)
-            .exec(callback)
-
+            .exec(callbackFactory(scan))
     }
 
 }

@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface CompletedScansRepository {
 
-    val scans: Flow<String>
+    val scans: Flow<Scan>
 
-    fun addScan(scan: String)
+    fun addScan(scan: Scan)
 
 }

@@ -15,17 +15,15 @@ class RoutingConfig(
         routing {
             get("/{website}") {
                 val website = call.parameters["website"]
-                println(website)
-                val params = call.request.queryParameters
-                println(params["tool"])
-                service.runAmass(website!!)
-                call.respondText("Hello PtBox!")
+                val taskId = service.runAmass(website!!)
+
+                call.respondText("Task $taskId processing")
             }
 
             webSocket("") {
-                service.scansRepository.scans.collect { c ->
+                service.scanCompletedEvent.collect { c ->
                     println(c)
-                    send(Frame.Text(c))
+                    send(Frame.Text("Scan #${c.id}: ${c.website} = [${c.results as List<String>}]"))
                 }
             }
         }
