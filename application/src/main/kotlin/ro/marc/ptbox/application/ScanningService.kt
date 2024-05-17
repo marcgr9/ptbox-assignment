@@ -6,11 +6,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import ro.marc.ptbox.shared.domain.CompletedScansRepository
 import ro.marc.ptbox.shared.domain.Scan
 import ro.marc.ptbox.shared.domain.ScanAdapter
 import ro.marc.ptbox.shared.domain.ScansRepository
+import ro.marc.ptbox.shared.domain.validator.WebsiteValidator
 import java.util.*
 
 class ScanningService(
@@ -33,6 +33,10 @@ class ScanningService(
     }
 
     suspend fun runAmass(website: String): UUID {
+        if (!WebsiteValidator.validate(website)) {
+            throw IllegalArgumentException()
+        }
+
         val scan = Scan(
             id = generateTaskId(),
 //            type = Scan.Type.AMASS,
