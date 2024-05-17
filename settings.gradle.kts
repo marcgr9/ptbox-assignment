@@ -1,4 +1,4 @@
-rootProject.name = "ro.marc.ptbox"
+rootProject.name = "PTBOX Assignment"
 
 include("shared")
 include("adapters:db")
