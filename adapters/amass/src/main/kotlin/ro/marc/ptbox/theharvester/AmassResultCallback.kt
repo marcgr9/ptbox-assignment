@@ -52,13 +52,9 @@ class AmassResultCallback(
         stdOut += `object`.payload.toString(Charset.defaultCharset()) + "\n"
     }
 
-    private fun parseStdOut(stdOut: String): List<String> {
-        val lines = stdOut.split("\n")
-        if (lines.first() == "No root domain names were provided") {
-            return listOf()
-        }
-
-        return lines.filter { it.isNotBlank() }
-    }
+    private fun parseStdOut(stdOut: String): List<String> =
+        stdOut
+            .split("\n")
+            .filter { it.isNotBlank() }
 
 }

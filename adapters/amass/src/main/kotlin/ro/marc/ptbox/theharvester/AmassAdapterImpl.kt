@@ -22,7 +22,7 @@ class AmassAdapterImpl: ScanAdapter, KoinComponent {
     override fun processWebsite(scan: Scan) {
         val container = dockerClient
             .createContainerCmd("caffix/amass")
-            .withCmd("intel", "-whois", scan.website)
+            .withCmd("intel", "-whois", "-d", scan.website)
             .withHostConfig(HostConfig().withAutoRemove(true))
             .exec()
 
