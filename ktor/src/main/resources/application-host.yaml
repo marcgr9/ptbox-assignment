@@ -1,0 +1,8 @@
+ktor:
+    deployment:
+        port: 8080
+
+database:
+    url: "jdbc:postgresql://localhost:5432/ptbox"
+    username: "postgres"
+    password: "postgres"

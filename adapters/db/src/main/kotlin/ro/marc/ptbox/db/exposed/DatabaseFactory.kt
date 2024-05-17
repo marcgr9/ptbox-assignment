@@ -13,7 +13,7 @@ object DatabaseFactory {
 
     fun provide(config: GlobalConfig): Database {
         val hkConfig = HikariConfig().apply {
-            driverClassName = config.getString("database.driver")
+            driverClassName = "org.postgresql.Driver"
             jdbcUrl = config.getString("database.url")
             username = config.getString("database.username")
             password = config.getString("database.password")
