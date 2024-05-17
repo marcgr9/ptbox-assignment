@@ -10,6 +10,8 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.getKoin
@@ -20,6 +22,7 @@ import ro.marc.ptbox.ktor.rest.StatusPageConfig
 import ro.marc.ptbox.ktor.rest.di.getRestModule
 import ro.marc.ptbox.shared.GlobalConfig
 import ro.marc.ptbox.shared.di.getSharedModule
+import java.time.Duration
 
 fun main(args: Array<String>) {
     initKoin(args)
@@ -67,6 +70,13 @@ private fun Application.applyPlugins() {
     }
 
     install(Routing)
+    install(WebSockets) {
+        pingPeriod = Duration.ofSeconds(15)
+        timeout = Duration.ofSeconds(15)
+        maxFrameSize = Long.MAX_VALUE
+        masking = false
+    }
+
     with(getKoin().get<RoutingConfig>()) {
         configureRoutes()
     }

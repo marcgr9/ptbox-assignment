@@ -2,6 +2,6 @@ rootProject.name = "PTBOX Assignment"
 
 include("shared")
 include("adapters:db")
-include("adapters:theharvester")
+include("adapters:amass")
 include("application")
 include("ktor")
