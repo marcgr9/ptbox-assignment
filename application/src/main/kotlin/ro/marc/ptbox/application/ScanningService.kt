@@ -6,14 +6,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ro.marc.ptbox.shared.domain.CompletedScansRepository
 import ro.marc.ptbox.shared.domain.Scan
 import ro.marc.ptbox.shared.domain.ScanAdapter
+import ro.marc.ptbox.shared.domain.ScansRepository
 import java.util.*
 
 class ScanningService(
     private val scanAdapter: ScanAdapter,
-    private val scansRepository: CompletedScansRepository,
+    private val completedScansEventRepository: CompletedScansRepository,
+    private val scansRepository: ScansRepository,
 ) {
 
     private val _scanCompletedEvent = MutableSharedFlow<Scan>(replay = 1)
@@ -22,28 +25,30 @@ class ScanningService(
 
     init {
         CoroutineScope(SupervisorJob()).launch {
-            scansRepository.scans.collect {
-                val scan = saveScanInDb(it)
+            completedScansEventRepository.scans.collect {
+                val scan = scansRepository.update(it)
                 _scanCompletedEvent.tryEmit(scan)
             }
         }
     }
 
-    fun runAmass(website: String): UUID {
+    suspend fun runAmass(website: String): UUID {
         val scan = Scan(
             id = generateTaskId(),
-            type = Scan.Type.AMASS,
+//            type = Scan.Type.AMASS,
             website = website,
-            results = null,
+            status = Scan.Status.PENDING,
+            results = listOf(),
         )
         scanAdapter.processWebsite(scan)
+
+        scansRepository.create(scan)
 
         return scan.id
     }
 
     private suspend fun saveScanInDb(scan: Scan): Scan {
-        // save in db when the adapter is implemented
-        return scan
+        return scansRepository.create(scan)
     }
 
     private fun generateTaskId(): UUID = UUID.randomUUID();

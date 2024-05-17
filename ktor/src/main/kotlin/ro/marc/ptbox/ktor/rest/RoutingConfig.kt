@@ -23,7 +23,7 @@ class RoutingConfig(
             webSocket("") {
                 service.scanCompletedEvent.collect { c ->
                     println(c)
-                    send(Frame.Text("Scan #${c.id}: ${c.website} = [${c.results as List<String>}]"))
+                    send(Frame.Text("Scan #${c.id}: ${c.status} ${c.website} = [${c.results}]"))
                 }
             }
         }

@@ -6,7 +6,6 @@ import ro.marc.ptbox.shared.domain.CompletedScansRepository
 import ro.marc.ptbox.shared.domain.Scan
 import java.io.Closeable
 import java.nio.charset.Charset
-import java.util.UUID
 
 class AmassResultCallback(
     private val scansRepository: CompletedScansRepository,
@@ -19,10 +18,21 @@ class AmassResultCallback(
 
     override fun onStart(closeable: Closeable?) { }
 
-    override fun onError(throwable: Throwable?) { }
+    override fun onError(throwable: Throwable?) {
+        scansRepository.addScan(
+            scan.copy(
+                status = Scan.Status.FAILED,
+            )
+        )
+    }
 
     override fun onComplete() {
-        scansRepository.addScan(scan.copy(results = parseStdOut(stdOut)))
+        scansRepository.addScan(
+            scan.copy(
+                status = Scan.Status.COMPLETED,
+                results = parseStdOut(stdOut)
+            )
+        )
     }
 
     override fun onNext(`object`: Frame?) {

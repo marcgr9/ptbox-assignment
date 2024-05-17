@@ -10,11 +10,16 @@ repositories {
     mavenCentral()
 }
 
+val exposedVersion: String = "0.44.0"
+
 dependencies {
-    implementation("org.jetbrains.exposed:exposed-core:0.41.1")
-    implementation("org.jetbrains.exposed:exposed-dao:0.41.1")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.41.1")
-    implementation("org.jetbrains.exposed:exposed-java-time:0.41.1")
+    implementation(project(":shared"))
+
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("com.h2database:h2:2.1.214")
 
     implementation("com.zaxxer:HikariCP:4.0.3")
@@ -22,6 +27,5 @@ dependencies {
     implementation("io.insert-koin:koin-core:3.5.0")
     implementation("io.insert-koin:koin-core-coroutines:3.5.0")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
     implementation("org.postgresql:postgresql:42.2.2")
 }

@@ -1,3 +1,9 @@
 ktor:
     deployment:
         port: 8080
+
+database:
+    driver: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/ptbox"
+    username: "postgres"
+    password: "postgres"

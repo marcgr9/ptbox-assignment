@@ -19,4 +19,6 @@ dependencies {
 
     implementation("io.insert-koin:koin-core:3.5.0")
     implementation("io.insert-koin:koin-core-coroutines:3.5.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
 }
