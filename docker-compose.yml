@@ -12,8 +12,6 @@ services:
     privileged: true
   db:
     image: postgres
-    volumes:
-      - ./tmp/db:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ptbox
       POSTGRES_USER: ${DB_USERNAME}
