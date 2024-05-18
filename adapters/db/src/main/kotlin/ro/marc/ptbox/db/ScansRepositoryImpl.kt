@@ -1,5 +1,6 @@
 package ro.marc.ptbox.db
 
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import ro.marc.ptbox.db.exposed.ScanEntity
@@ -38,6 +39,7 @@ class ScansRepositoryImpl: ScansRepository {
                     query.all()
                 }
             }
+            .orderBy(ScansTable.createdAt to SortOrder.DESC)
             .map { it.toDomain() }
     }
 

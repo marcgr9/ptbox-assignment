@@ -36,7 +36,7 @@ class RoutingConfig(
                 )
             }
 
-            webSocket("") {
+            webSocket("/") {
                 service.scanCompletedEvent.collect { c ->
                     send(Frame.Text(Json.encodeToString(c)))
                 }
