@@ -9,7 +9,7 @@ import java.util.*
 data class Scan(
     @Serializable(with = UUIDSerializer::class)
     val id: UUID,
-//    val type: Type,
+    val type: Type,
     val website: String,
     val status: Status,
     val results: List<String>,

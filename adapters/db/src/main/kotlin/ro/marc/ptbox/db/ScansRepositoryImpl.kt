@@ -11,6 +11,7 @@ class ScansRepositoryImpl: ScansRepository {
 
     override suspend fun create(scan: Scan): Scan = query {
         val entity = ScanEntity.new(scan.id) {
+            type = scan.type
             website = scan.website
             results = scan.results
             status = scan.status
@@ -40,7 +41,7 @@ class ScansRepositoryImpl: ScansRepository {
             .map { it.toDomain() }
     }
 
-    private fun ScanEntity.toDomain() = Scan(this.id.value, this.website, this.status, this.results, this.createdAt)
+    private fun ScanEntity.toDomain() = Scan(this.id.value, this.type, this.website, this.status, this.results, this.createdAt)
 
     private suspend fun <T> query(
         transaction: Transaction? = null,

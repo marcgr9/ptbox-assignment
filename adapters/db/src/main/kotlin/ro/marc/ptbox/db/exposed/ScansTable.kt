@@ -12,7 +12,18 @@ import java.time.LocalDateTime
 object ScansTable: UUIDTable(name = "scans") {
 
     private const val PG_STATUS_ENUM_DEF = "StatusEnum"
+    private const val PG_TYPE_ENUM_DEF = "TypeEnum"
 
+    var type = customEnumeration(
+        "type",
+        PG_TYPE_ENUM_DEF,
+        { value ->
+            Scan.Type.valueOf(value as String)
+        },
+        {
+            PGEnum(PG_TYPE_ENUM_DEF, it)
+        }
+    )
     var website = varchar("website", 50)
     var status = customEnumeration(
         "status",
@@ -28,7 +39,8 @@ object ScansTable: UUIDTable(name = "scans") {
     var createdAt = datetime("created_at").clientDefault { LocalDateTime.now().toKotlinLocalDateTime() }
 
 
-    val pgCreateEnumSql = "CREATE TYPE $PG_STATUS_ENUM_DEF AS ENUM (${Scan.Status.entries.joinToString(separator = ",") { "'${it.name.uppercase()}'" }});"
+    val pgCreateStatusEnumSql = "CREATE TYPE $PG_STATUS_ENUM_DEF AS ENUM (${Scan.Status.entries.joinToString(separator = ",") { "'${it.name.uppercase()}'" }});"
+    val pgCreateTypeEnumSql = "CREATE TYPE $PG_TYPE_ENUM_DEF AS ENUM (${Scan.Type.entries.joinToString(separator = ",") { "'${it.name.uppercase()}'" }});"
 
     val failPendingScansSql = "UPDATE ${this.tableName} SET ${this.status.name} = '${Scan.Status.FAILED.name}' WHERE ${this.status.name} = '${Scan.Status.PENDING.name}'"
 }

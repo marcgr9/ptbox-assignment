@@ -32,15 +32,23 @@ object DatabaseFactory {
 
         transaction(db = db) {
             try {
-                exec(ScansTable.pgCreateEnumSql)
+                exec(ScansTable.pgCreateStatusEnumSql)
+            } catch (ex: Exception) {
+                //
+            }
+        }
+        transaction(db = db) {
+            try {
+                exec(ScansTable.pgCreateTypeEnumSql)
             } catch (ex: Exception) {
                 //
             }
         }
 
         transaction(db = db) {
-            exec(ScansTable.failPendingScansSql)
             SchemaUtils.createMissingTablesAndColumns(*tables)
+
+            exec(ScansTable.failPendingScansSql)
         }
 
         return db
