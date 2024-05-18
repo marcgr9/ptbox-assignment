@@ -39,6 +39,7 @@ object DatabaseFactory {
         }
 
         transaction(db = db) {
+            exec(ScansTable.failPendingScansSql)
             SchemaUtils.createMissingTablesAndColumns(*tables)
         }
 

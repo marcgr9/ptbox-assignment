@@ -30,4 +30,5 @@ object ScansTable: UUIDTable(name = "scans") {
 
     val pgCreateEnumSql = "CREATE TYPE $PG_STATUS_ENUM_DEF AS ENUM (${Scan.Status.entries.joinToString(separator = ",") { "'${it.name.uppercase()}'" }});"
 
+    val failPendingScansSql = "UPDATE ${this.tableName} SET ${this.status.name} = '${Scan.Status.FAILED.name}' WHERE ${this.status.name} = '${Scan.Status.PENDING.name}'"
 }
