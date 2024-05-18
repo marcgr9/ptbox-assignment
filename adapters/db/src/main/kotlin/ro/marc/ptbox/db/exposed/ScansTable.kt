@@ -6,7 +6,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.json.json
 import org.jetbrains.exposed.sql.kotlin.datetime.datetime
 import ro.marc.ptbox.db.exposed.util.PGEnum
-import ro.marc.ptbox.shared.domain.Scan
+import ro.marc.ptbox.shared.domain.model.Scan
 import java.time.LocalDateTime
 
 object ScansTable: UUIDTable(name = "scans") {

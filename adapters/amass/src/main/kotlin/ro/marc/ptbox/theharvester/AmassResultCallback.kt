@@ -3,8 +3,8 @@ package ro.marc.ptbox.theharvester
 import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.model.Frame
 import com.github.dockerjava.api.model.StreamType
-import ro.marc.ptbox.shared.domain.CompletedScansRepository
-import ro.marc.ptbox.shared.domain.Scan
+import ro.marc.ptbox.shared.domain.ports.CompletedScansRepository
+import ro.marc.ptbox.shared.domain.model.Scan
 import java.io.Closeable
 import java.nio.charset.Charset
 import java.util.concurrent.ExecutionException

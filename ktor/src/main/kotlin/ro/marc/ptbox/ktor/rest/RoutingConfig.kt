@@ -1,11 +1,19 @@
 package ro.marc.ptbox.ktor.rest
 
+import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import ro.marc.ptbox.application.ScanningService
+import ro.marc.ptbox.shared.domain.model.Scan
+import ro.marc.ptbox.shared.dto.FindScansQuery
+import ro.marc.ptbox.shared.dto.ScansQueryDTO
+import ro.marc.ptbox.shared.dto.StartScanDTO
 
 class RoutingConfig(
     private val service: ScanningService,
@@ -13,20 +21,31 @@ class RoutingConfig(
 
     fun Application.configureRoutes() {
         routing {
-            get("/{website}") {
-                val website = call.parameters["website"]
-                val taskId = service.runAmass(website!!)
+            post("/scans") {
+                val dto = call.receive<StartScanDTO>()
 
-                call.respondText("Task $taskId processing")
+                call.respond<Scan>(
+                    service.runAmass(dto.website)
+                )
+            }
+            get("/scans") {
+                val searchParams = call.request.queryParameters.toGetScansQueryParameters()
+
+                call.respond(
+                    ScansQueryDTO(service.findScans(searchParams))
+                )
             }
 
             webSocket("") {
                 service.scanCompletedEvent.collect { c ->
-                    println(c)
-                    send(Frame.Text("Scan #${c.id}: ${c.status} ${c.website} = [${c.results}]"))
+                    send(Frame.Text(Json.encodeToString(c)))
                 }
             }
         }
     }
+
+    private fun Parameters.toGetScansQueryParameters() = FindScansQuery(
+        this.getAll("status")?.map { Scan.Status.valueOf(it) } ?: listOf()
+    )
 
 }

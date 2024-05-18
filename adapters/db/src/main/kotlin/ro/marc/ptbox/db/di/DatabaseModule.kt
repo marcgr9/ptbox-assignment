@@ -5,7 +5,7 @@ import org.koin.dsl.module
 import ro.marc.ptbox.db.ScansRepositoryImpl
 import ro.marc.ptbox.db.exposed.DatabaseFactory
 import ro.marc.ptbox.shared.GlobalConfig
-import ro.marc.ptbox.shared.domain.ScansRepository
+import ro.marc.ptbox.shared.domain.ports.ScansRepository
 
 fun getDatabaseModule() = module {
     single<Database>(createdAtStart = true) {

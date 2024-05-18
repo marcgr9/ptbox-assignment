@@ -1,9 +1,13 @@
-package ro.marc.ptbox.shared.domain
+package ro.marc.ptbox.shared.domain.model
 
 import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Serializable
+import ro.marc.ptbox.shared.util.UUIDSerializer
 import java.util.*
 
+@Serializable
 data class Scan(
+    @Serializable(with = UUIDSerializer::class)
     val id: UUID,
 //    val type: Type,
     val website: String,

@@ -6,10 +6,10 @@ import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.core.DockerClientBuilder
 import org.koin.core.component.KoinComponent
 import org.koin.core.parameter.parametersOf
-import ro.marc.ptbox.shared.domain.Scan
-import ro.marc.ptbox.shared.domain.ScanAdapter
+import ro.marc.ptbox.shared.domain.model.Scan
+import ro.marc.ptbox.shared.domain.ports.ScannerPort
 
-class AmassAdapterImpl: ScanAdapter, KoinComponent {
+class AmassAdapterImpl: ScannerPort, KoinComponent {
 
     private val dockerClient = DockerClientBuilder.getInstance().build()
 
