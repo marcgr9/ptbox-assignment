@@ -3,10 +3,12 @@ package ro.marc.ptbox.theharvester
 import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.model.Frame
 import com.github.dockerjava.api.model.StreamType
+import kotlinx.datetime.toKotlinLocalDateTime
 import ro.marc.ptbox.shared.domain.ports.CompletedScansRepository
 import ro.marc.ptbox.shared.domain.model.Scan
 import java.io.Closeable
 import java.nio.charset.Charset
+import java.time.LocalDateTime
 import java.util.concurrent.ExecutionException
 
 class TheHarvesterResultCallback(
@@ -31,9 +33,11 @@ class TheHarvesterResultCallback(
 
     override fun onComplete() {
         scansRepository.addScan(
-            outputParser.parseOutput(stdOut)
+            outputParser
+                .parseOutput(stdOut)
                 .copy(
-                    status = Scan.Status.COMPLETED
+                    status = Scan.Status.COMPLETED,
+                    completedAt = LocalDateTime.now().toKotlinLocalDateTime(),
                 )
         )
     }

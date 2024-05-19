@@ -14,6 +14,7 @@ data class Scan(
     val status: Status,
     val results: Results,
     val createdAt: LocalDateTime? = null,
+    val completedAt: LocalDateTime? = null,
 ) {
 
     enum class Type {

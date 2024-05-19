@@ -12,6 +12,7 @@ class ScanEntity(id: EntityID<UUID>): UUIDEntity(id) {
     var status by ScansTable.status
     var results by ScansTable.results
     var createdAt by ScansTable.createdAt
+    var completedAt by ScansTable.completedAt
 
     companion object : UUIDEntityClass<ScanEntity>(ScansTable)
 }

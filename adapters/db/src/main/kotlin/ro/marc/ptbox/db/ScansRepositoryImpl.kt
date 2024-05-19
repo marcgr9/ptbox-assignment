@@ -25,6 +25,7 @@ class ScansRepositoryImpl: ScansRepository {
         val entity = ScanEntity[scan.id].apply {
             status = scan.status
             results = scan.results
+            completedAt = scan.completedAt
         }
 
         entity.toDomain()
@@ -43,7 +44,7 @@ class ScansRepositoryImpl: ScansRepository {
             .map { it.toDomain() }
     }
 
-    private fun ScanEntity.toDomain() = Scan(this.id.value, this.type, this.website, this.status, this.results, this.createdAt)
+    private fun ScanEntity.toDomain() = Scan(this.id.value, this.type, this.website, this.status, this.results, this.createdAt, this.completedAt)
 
     private suspend fun <T> query(
         transaction: Transaction? = null,

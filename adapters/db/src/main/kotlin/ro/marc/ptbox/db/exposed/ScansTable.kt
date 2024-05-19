@@ -37,6 +37,7 @@ object ScansTable: UUIDTable(name = "scans") {
     )
     var results = json<Scan.Results>("results", Json { prettyPrint = true })
     var createdAt = datetime("created_at").clientDefault { LocalDateTime.now().toKotlinLocalDateTime() }
+    var completedAt = datetime("completed_at").nullable()
 
 
     val pgCreateStatusEnumSql = "CREATE TYPE $PG_STATUS_ENUM_DEF AS ENUM (${Scan.Status.entries.joinToString(separator = ",") { "'${it.name.uppercase()}'" }});"
