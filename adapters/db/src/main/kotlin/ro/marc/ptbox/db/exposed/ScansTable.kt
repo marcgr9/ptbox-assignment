@@ -35,7 +35,7 @@ object ScansTable: UUIDTable(name = "scans") {
             PGEnum(PG_STATUS_ENUM_DEF, it)
         }
     )
-    var results = json<List<String>>("results", Json { prettyPrint = true })
+    var results = json<Scan.Results>("results", Json { prettyPrint = true })
     var createdAt = datetime("created_at").clientDefault { LocalDateTime.now().toKotlinLocalDateTime() }
 
 

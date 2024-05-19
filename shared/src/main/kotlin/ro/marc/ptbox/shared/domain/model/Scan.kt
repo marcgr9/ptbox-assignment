@@ -12,7 +12,7 @@ data class Scan(
     val type: Type,
     val website: String,
     val status: Status,
-    val results: List<String>,
+    val results: Results,
     val createdAt: LocalDateTime? = null,
 ) {
 
@@ -25,6 +25,20 @@ data class Scan(
         COMPLETED,
         FAILED,
         PENDING,
+    }
+
+    @Serializable
+    data class Results(
+        val whoIs: List<String>,
+        val ips: List<String>,
+        val emails: List<String>,
+        val subdomains: List<String>,
+    ) {
+
+        companion object {
+            fun empty() = Results(emptyList(), emptyList(), emptyList(), emptyList())
+        }
+
     }
 
 }

@@ -45,7 +45,7 @@ class ScanningService(
             type = type,
             website = website,
             status = Scan.Status.PENDING,
-            results = listOf(),
+            results = Scan.Results.empty(),
         )
 
         val persistedScan = scansRepository.create(scan)

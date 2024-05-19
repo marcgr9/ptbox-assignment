@@ -10,9 +10,11 @@ import java.nio.charset.Charset
 import java.util.concurrent.ExecutionException
 
 class TheHarvesterResultCallback(
-//    private val scansRepository: CompletedScansRepository,
-//    private val scan: Scan,
+    private val outputParser: HarvesterOutputParser,
+    private val scansRepository: CompletedScansRepository,
 ): ResultCallback<Frame> {
+
+    private var stdOut = ""
 
     override fun close() { }
 
@@ -21,11 +23,11 @@ class TheHarvesterResultCallback(
     override fun onError(throwable: Throwable?) { }
 
     override fun onComplete() {
-        println("done")
+        scansRepository.addScan(outputParser.parseOutput(stdOut))
     }
 
     override fun onNext(`object`: Frame) {
-        println(`object`)
+        stdOut += `object`.payload.toString(Charset.defaultCharset())
     }
 
 }

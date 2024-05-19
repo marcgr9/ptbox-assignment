@@ -21,7 +21,7 @@ class TheHarvesterAdapterImpl: ScannerPort, KoinComponent {
         val container = dockerClient
             .createContainerCmd("theharvester")
             .withEntrypoint("/root/.local/bin/theHarvester")
-            .withCmd("-b", "bing", "-d", scan.website)
+            .withCmd("-b", "rapiddns,otx", "-d", scan.website)
             .withHostConfig(HostConfig().withAutoRemove(true))
             .exec()
 
