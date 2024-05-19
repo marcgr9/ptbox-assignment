@@ -1,6 +1,8 @@
+name: ptbox
 services:
   ktor:
     build: .
+    container_name: ptbox-ktor
     environment:
       JDBC_URL: ${JDBC_URL}
       DB_USERNAME: ${DB_USERNAME}
@@ -16,6 +18,7 @@ services:
 
   psql-db:
     image: postgres
+    container_name: ptbox-psql
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
