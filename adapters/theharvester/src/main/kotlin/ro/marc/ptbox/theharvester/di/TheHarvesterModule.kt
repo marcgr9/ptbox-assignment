@@ -26,6 +26,7 @@ fun getTheHarvesterModule() = module {
                 )
             },
             get<CompletedScansRepository>(),
+            it.get<Scan>(),
         )
     }
     single<ScannerPort>(named(Scan.Type.THE_HARVESTER)) {

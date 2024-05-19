@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutionException
 class TheHarvesterResultCallback(
     private val outputParser: HarvesterOutputParser,
     private val scansRepository: CompletedScansRepository,
+    private val scan: Scan,
 ): ResultCallback<Frame> {
 
     private var stdOut = ""
@@ -20,10 +21,21 @@ class TheHarvesterResultCallback(
 
     override fun onStart(closeable: Closeable?) { }
 
-    override fun onError(throwable: Throwable?) { }
+    override fun onError(throwable: Throwable?) {
+        scansRepository.addScan(
+            scan.copy(
+                status = Scan.Status.FAILED
+            )
+        )
+    }
 
     override fun onComplete() {
-        scansRepository.addScan(outputParser.parseOutput(stdOut))
+        scansRepository.addScan(
+            outputParser.parseOutput(stdOut)
+                .copy(
+                    status = Scan.Status.COMPLETED
+                )
+        )
     }
 
     override fun onNext(`object`: Frame) {
