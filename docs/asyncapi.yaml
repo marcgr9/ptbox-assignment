@@ -1,0 +1,86 @@
+asyncapi: '2.0.0'
+
+info:
+  title: PTBOX Assignment WS api
+  version: '1.0.0'
+  description: PTBOX Assignment WS api
+
+servers:
+  uat:
+    url: 'ws://127.0.0.1:8080'
+    protocol: ws
+
+channels:
+  /:
+    subscribe:
+      summary: Receive updates about scans. When a scan is no longer PENDING, it will be broadcasted here.
+      operationId: receiveScanUpdates
+      message:
+        contentType: application/json
+        payload:
+          $ref: '#/components/schemas/Scan'
+
+components:
+  schemas:
+    Results:
+      type: "object"
+      properties:
+        whoIs:
+          type: "array"
+          items:
+            type: "string"
+        ips:
+          type: "array"
+          items:
+            type: "string"
+        emails:
+          type: "array"
+          items:
+            type: "string"
+        subdomains:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - "whoIs"
+        - "ips"
+        - "emails"
+        - "subdomains"
+    Scan:
+      type: object
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        type:
+          $ref: '#/components/schemas/ScanType'
+        website:
+          type: "string"
+        status:
+          $ref: '#/components/schemas/ScanStatus'
+        results:
+          $ref: "#/components/schemas/Results"
+        createdAt:
+          type: string
+          format: date
+        completedAt:
+          type: string
+          format: date
+      required:
+        - "id"
+        - "type"
+        - "website"
+        - "status"
+        - "results"
+        - "createdAt"
+    ScanType:
+      type: "string"
+      enum:
+        - "AMASS"
+        - "THE_HARVESTER"
+    ScanStatus:
+      type: "string"
+      enum:
+        - "COMPLETED"
+        - "FAILED"
+        - "PENDING"

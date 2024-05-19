@@ -1,0 +1,134 @@
+openapi: "3.1.0"
+
+info:
+  title: "PTBOX Assignment API"
+  description: "PTBOX Assignment API"
+  version: "1.0.0"
+
+servers:
+  - url: "http://127.0.0.1:8080"
+
+paths:
+  /scans:
+    get:
+      tags:
+        - controller
+      description: "Get all the scans. Optionally filter by status"
+      parameters:
+        - name: "status"
+          in: "query"
+          required: false
+          schema:
+            type: "array"
+            items:
+              $ref: '#/components/schemas/ScanStatus'
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ScansQueryDTO"
+    post:
+      tags:
+        - controller
+      description: "Initiate a new scan"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartScanDTO"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Scan"
+        "400":
+          description: "Validation error"
+
+components:
+  schemas:
+    Results:
+      type: "object"
+      properties:
+        whoIs:
+          type: "array"
+          items:
+            type: "string"
+        ips:
+          type: "array"
+          items:
+            type: "string"
+        emails:
+          type: "array"
+          items:
+            type: "string"
+        subdomains:
+          type: "array"
+          items:
+            type: "string"
+      required:
+        - "whoIs"
+        - "ips"
+        - "emails"
+        - "subdomains"
+    Scan:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+        type:
+          $ref: '#/components/schemas/ScanType'
+        website:
+          type: "string"
+        status:
+          $ref: '#/components/schemas/ScanStatus'
+        results:
+          $ref: "#/components/schemas/Results"
+        createdAt:
+          type: string
+          format: date
+        completedAt:
+          type: string
+          format: date
+      required:
+        - "id"
+        - "type"
+        - "website"
+        - "status"
+        - "results"
+        - "createdAt"
+    ScansQueryDTO:
+      type: "object"
+      properties:
+        scans:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Scan"
+      required:
+        - "scans"
+    StartScanDTO:
+      type: "object"
+      properties:
+        website:
+          type: "string"
+        scanType:
+          $ref: '#/components/schemas/ScanType'
+      required:
+        - "website"
+        - "scanType"
+    ScanType:
+      type: "string"
+      enum:
+        - "AMASS"
+        - "THE_HARVESTER"
+    ScanStatus:
+      type: "string"
+      enum:
+        - "COMPLETED"
+        - "FAILED"
+        - "PENDING"
