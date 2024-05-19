@@ -4,7 +4,7 @@ RUN mkdir -p /home/gradle/cache_home
 ENV GRADLE_USER_HOME /home/gradle/cache_home
 COPY . /home/gradle/src/
 WORKDIR /home/gradle/src
-RUN gradle clean build -i --stacktrace
+RUN gradle clean build --no-daemon
 
 FROM gradle:7-jdk19 AS build
 
