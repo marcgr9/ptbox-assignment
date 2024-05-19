@@ -15,7 +15,11 @@ class CorsConfig {
         allowMethod(HttpMethod.Head)
 
         allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader(HttpHeaders.AccessControlRequestHeaders)
+        allowHeader(HttpHeaders.AccessControlRequestMethod)
         allowHeader(HttpHeaders.ContentType)
+
+        exposeHeader(HttpHeaders.ContentType)
 
         anyHost()
     }
