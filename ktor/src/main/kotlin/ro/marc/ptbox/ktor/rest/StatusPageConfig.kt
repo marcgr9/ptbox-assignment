@@ -9,7 +9,7 @@ class StatusPageConfig {
     fun StatusPagesConfig.configureStatusPages() {
         exception<Exception> { call, ex ->
             ex.printStackTrace()
-            call.respondText("error", status = HttpStatusCode.BadRequest)
+            call.respond(HttpStatusCode.BadRequest)
         }
     }
 

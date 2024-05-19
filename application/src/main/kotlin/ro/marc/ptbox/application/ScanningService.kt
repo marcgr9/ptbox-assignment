@@ -1,20 +1,23 @@
 package ro.marc.ptbox.application
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
-import ro.marc.ptbox.shared.domain.CompletedScansRepository
-import ro.marc.ptbox.shared.domain.Scan
-import ro.marc.ptbox.shared.domain.ScanAdapter
-import ro.marc.ptbox.shared.domain.ScansRepository
+import ro.marc.ptbox.shared.domain.ports.CompletedScansRepository
+import ro.marc.ptbox.shared.domain.model.Scan
+import ro.marc.ptbox.shared.domain.ports.ScannerPort
+import ro.marc.ptbox.shared.domain.ports.ScansRepository
 import ro.marc.ptbox.shared.domain.validator.WebsiteValidator
+import ro.marc.ptbox.shared.dto.FindScansQuery
 import java.util.*
 
 class ScanningService(
-    private val scanAdapter: ScanAdapter,
+    private val amassPort: ScannerPort,
+    private val theHarvesterPort: ScannerPort,
     private val completedScansEventRepository: CompletedScansRepository,
     private val scansRepository: ScansRepository,
 ) {
@@ -32,26 +35,34 @@ class ScanningService(
         }
     }
 
-    suspend fun runAmass(website: String): UUID {
+    suspend fun scanDomain(website: String, type: Scan.Type): Scan {
         if (!WebsiteValidator.validate(website)) {
             throw IllegalArgumentException()
         }
 
         val scan = Scan(
             id = generateTaskId(),
-//            type = Scan.Type.AMASS,
+            type = type,
             website = website,
             status = Scan.Status.PENDING,
-            results = listOf(),
+            results = Scan.Results.empty(),
         )
 
-        scansRepository.create(scan)
+        val persistedScan = scansRepository.create(scan)
 
-        scanAdapter.processWebsite(scan)
+        val processFn = when (type) {
+            Scan.Type.AMASS -> amassPort::processWebsite
+            Scan.Type.THE_HARVESTER -> theHarvesterPort::processWebsite
+        }
+        processFn(scan)
 
-        return scan.id
+        return persistedScan
     }
 
-    private fun generateTaskId(): UUID = UUID.randomUUID();
+    suspend fun findScans(searchParams: FindScansQuery): List<Scan> {
+        return scansRepository.findByStatusIn(searchParams.status)
+    }
+
+    private fun generateTaskId(): UUID = UUID.randomUUID()
 
 }

@@ -20,6 +20,7 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":adapters:db"))
     implementation(project(":adapters:amass"))
+    implementation(project(":adapters:theharvester"))
 
     implementation(platform("io.insert-koin:koin-bom:$koin_version"))
     implementation("io.insert-koin:koin-core")

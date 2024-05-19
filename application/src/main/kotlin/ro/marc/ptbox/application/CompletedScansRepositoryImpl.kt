@@ -2,8 +2,8 @@ package ro.marc.ptbox.application
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import ro.marc.ptbox.shared.domain.CompletedScansRepository
-import ro.marc.ptbox.shared.domain.Scan
+import ro.marc.ptbox.shared.domain.ports.CompletedScansRepository
+import ro.marc.ptbox.shared.domain.model.Scan
 
 class CompletedScansRepositoryImpl: CompletedScansRepository {
 
