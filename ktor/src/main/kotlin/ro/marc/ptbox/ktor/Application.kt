@@ -32,8 +32,7 @@ fun main(args: Array<String>) {
 private fun initKoin(args: Array<String>) {
     startKoin {
         modules(
-            getConfigModule(commandLineEnvironment(args).config),
-            getSharedModule(),
+            getSharedModule(commandLineEnvironment(args).config.toMap()),
             getApplicationModule(),
             getRestModule(),
         )
@@ -79,11 +78,5 @@ private fun Application.applyPlugins() {
 
     with(getKoin().get<RoutingConfig>()) {
         configureRoutes()
-    }
-}
-
-private fun getConfigModule(config: ApplicationConfig) = module(createdAtStart = true) {
-    single {
-        GlobalConfig(config.toMap())
     }
 }
