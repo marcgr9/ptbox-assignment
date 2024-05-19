@@ -1,7 +1,5 @@
 package ro.marc.ptbox.theharvester
 
-import com.github.dockerjava.api.async.ResultCallback
-import com.github.dockerjava.api.model.Frame
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.core.DockerClientBuilder
 import org.koin.core.component.KoinComponent
@@ -9,20 +7,21 @@ import org.koin.core.parameter.parametersOf
 import ro.marc.ptbox.shared.domain.model.Scan
 import ro.marc.ptbox.shared.domain.ports.ScannerPort
 
-class AmassAdapterImpl: ScannerPort, KoinComponent {
+class TheHarvesterAdapterImpl: ScannerPort, KoinComponent {
 
     private val dockerClient = DockerClientBuilder.getInstance().build()
 
-    private fun callbackFactory(scan: Scan): AmassResultCallback {
-        return getKoin().get<AmassResultCallback> {
+    private fun callbackFactory(scan: Scan): TheHarvesterResultCallback {
+        return getKoin().get<TheHarvesterResultCallback> {
             parametersOf(scan)
         }
     }
 
     override fun processWebsite(scan: Scan) {
         val container = dockerClient
-            .createContainerCmd("caffix/amass")
-            .withCmd("intel", "-whois", "-d", scan.website)
+            .createContainerCmd("theharvester")
+            .withEntrypoint("/root/.local/bin/theHarvester")
+            .withCmd("-b", "bing", "-d", scan.website)
             .withHostConfig(HostConfig().withAutoRemove(true))
             .exec()
 

@@ -2,6 +2,7 @@ package ro.marc.ptbox.theharvester.di
 
 import com.github.dockerjava.api.async.ResultCallback
 import com.github.dockerjava.api.model.Frame
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import ro.marc.ptbox.shared.domain.ports.ScannerPort
 import ro.marc.ptbox.shared.domain.ports.CompletedScansRepository
@@ -16,7 +17,7 @@ fun getAmassModule() = module {
             it.get<Scan>(),
         )
     }
-    single<ScannerPort> {
+    single<ScannerPort>(named(Scan.Type.AMASS)) {
         AmassAdapterImpl()
     }
 }

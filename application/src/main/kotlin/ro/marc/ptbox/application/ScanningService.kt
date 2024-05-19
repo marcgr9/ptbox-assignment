@@ -16,7 +16,8 @@ import ro.marc.ptbox.shared.dto.FindScansQuery
 import java.util.*
 
 class ScanningService(
-    private val scannerPort: ScannerPort,
+    private val amassPort: ScannerPort,
+    private val theHarvesterPort: ScannerPort,
     private val completedScansEventRepository: CompletedScansRepository,
     private val scansRepository: ScansRepository,
 ) {
@@ -34,14 +35,14 @@ class ScanningService(
         }
     }
 
-    suspend fun runAmass(website: String): Scan {
+    suspend fun scanDomain(website: String, type: Scan.Type): Scan {
         if (!WebsiteValidator.validate(website)) {
             throw IllegalArgumentException()
         }
 
         val scan = Scan(
             id = generateTaskId(),
-            type = Scan.Type.AMASS,
+            type = type,
             website = website,
             status = Scan.Status.PENDING,
             results = listOf(),
@@ -49,7 +50,11 @@ class ScanningService(
 
         val persistedScan = scansRepository.create(scan)
 
-        scannerPort.processWebsite(scan)
+        val processFn = when (type) {
+            Scan.Type.AMASS -> amassPort::processWebsite
+            Scan.Type.THE_HARVESTER -> theHarvesterPort::processWebsite
+        }
+        processFn(scan)
 
         return persistedScan
     }

@@ -25,7 +25,7 @@ class RoutingConfig(
                 val dto = call.receive<StartScanDTO>()
 
                 call.respond<Scan>(
-                    service.runAmass(dto.website)
+                    service.scanDomain(dto.website, dto.scanType)
                 )
             }
             get("/scans") {
