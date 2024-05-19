@@ -1,6 +1,6 @@
 @echo off
 
-cd \theHarvester
+cd .\theHarvester
 docker build -t theharvester .
 
 cd ..
