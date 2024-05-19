@@ -2,8 +2,6 @@ package ro.marc.ptbox.ktor
 
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.config.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -11,16 +9,13 @@ import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
-import kotlinx.coroutines.flow.MutableSharedFlow
 import org.koin.core.context.startKoin
-import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.getKoin
 import ro.marc.ptbox.application.di.getApplicationModule
 import ro.marc.ptbox.ktor.rest.CorsConfig
 import ro.marc.ptbox.ktor.rest.RoutingConfig
 import ro.marc.ptbox.ktor.rest.StatusPageConfig
 import ro.marc.ptbox.ktor.rest.di.getRestModule
-import ro.marc.ptbox.shared.GlobalConfig
 import ro.marc.ptbox.shared.di.getSharedModule
 import java.time.Duration
 
