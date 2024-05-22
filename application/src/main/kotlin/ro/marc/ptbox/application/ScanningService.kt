@@ -1,12 +1,9 @@
 package ro.marc.ptbox.application
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 import ro.marc.ptbox.shared.domain.ports.CompletedScansRepository
 import ro.marc.ptbox.shared.domain.model.Scan
 import ro.marc.ptbox.shared.domain.ports.ScannerPort
@@ -14,6 +11,7 @@ import ro.marc.ptbox.shared.domain.ports.ScansRepository
 import ro.marc.ptbox.shared.domain.validator.WebsiteValidator
 import ro.marc.ptbox.shared.dto.FindScansQuery
 import java.util.*
+import kotlin.coroutines.coroutineContext
 
 class ScanningService(
     private val amassPort: ScannerPort,
@@ -25,6 +23,8 @@ class ScanningService(
     private val _scanCompletedEvent = MutableSharedFlow<Scan>(extraBufferCapacity = 1)
     val scanCompletedEvent: Flow<Scan>
         get() = _scanCompletedEvent.asSharedFlow()
+
+    private val threadSpawningScope = CoroutineScope(Dispatchers.IO)
 
     init {
         CoroutineScope(SupervisorJob()).launch {
@@ -50,11 +50,13 @@ class ScanningService(
 
         val persistedScan = scansRepository.create(scan)
 
-        val processFn = when (type) {
-            Scan.Type.AMASS -> amassPort::processWebsite
-            Scan.Type.THE_HARVESTER -> theHarvesterPort::processWebsite
+        threadSpawningScope.launch {
+            val processFn = when (type) {
+                Scan.Type.AMASS -> amassPort::processWebsite
+                Scan.Type.THE_HARVESTER -> theHarvesterPort::processWebsite
+            }
+            processFn(scan)
         }
-        processFn(scan)
 
         return persistedScan
     }
